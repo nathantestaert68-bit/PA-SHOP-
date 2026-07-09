@@ -175,6 +175,12 @@ a{color:inherit;text-decoration:none}
 .method-btn{color:#94a3b8;cursor:pointer;background:#ffffff08;border:1px solid #ffffff12;border-radius:10px;flex-direction:column;align-items:center;gap:6px;padding:14px 10px;font-size:13px;font-weight:600;transition:all .2s;display:flex;font-family:inherit}
 .method-btn:hover{color:#fff;border-color:#ffffff40}
 .method-btn.selected{color:#fff;background:#e1000014;border-color:#e10000}
+.paypal-info{display:block;background:#0d0d14;border:1px solid #e1000040;border-radius:12px;padding:16px;margin-bottom:16px}
+.paypal-info-title{font-family:Anton,sans-serif;font-size:15px;font-weight:800;color:#e10000;margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px}
+.paypal-info-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px solid #ffffff08}
+.paypal-info-label{color:#64748b}
+.paypal-info-value{color:#fff;font-weight:700}
+.paypal-info-note{color:#e10000;font-size:12px;font-weight:700;margin-top:10px;text-align:center}
 .sub-after{color:#ffffff40;text-align:center;margin-top:14px;font-size:12px;line-height:1.6}
 html{scroll-behavior:smooth}
 @media (width<=1024px){.pricing-grid{grid-template-columns:repeat(2,1fr)}}
@@ -782,6 +788,12 @@ function createCheckout() {
           ${t('crypto')}
         </button>
       </div>
+      <div class="paypal-info" id="paypalInfo">
+        <div class="paypal-info-title">${state.lang === 'FR' ? 'Paiement PayPal' : 'PayPal Payment'}</div>
+        <div class="paypal-info-row"><span class="paypal-info-label">${state.lang === 'FR' ? 'Email' : 'Email'}</span><span class="paypal-info-value">alexuchiwa23@gmail.com</span></div>
+        <div class="paypal-info-row"><span class="paypal-info-label">${state.lang === 'FR' ? 'Montant' : 'Amount'}</span><span class="paypal-info-value" id="paypalAmount">${formatPrice(total, c === 'EUR' ? 'EUR' : 'USD')}</span></div>
+        <div class="paypal-info-note">${state.lang === 'FR' ? 'Envoie en ami proche (Friends & Family) ⚠️' : 'Send as Friends & Family ⚠️'}</div>
+      </div>
       <button class="checkout-btn" id="checkoutBtn">${t('proofConfirm')}</button>
       <div class="sub-after">
         ${state.lang === 'FR' ? 'Envoie en ami proche (Friends & Family). Après paiement, tu recevras une confirmation sur Discord.' : 'Send as Friends & Family. After payment, you will receive confirmation on Discord.'}
@@ -793,9 +805,13 @@ function createCheckout() {
     el.onclick = () => {
       section.querySelectorAll('[data-method]').forEach(b => b.classList.remove('selected'));
       el.classList.add('selected');
+      const info = section.querySelector('#paypalInfo');
+      if (info) {
+        info.style.display = el.dataset.method === 'paypal' ? 'block' : 'none';
+      }
       const btn = section.querySelector('#checkoutBtn');
       if (el.dataset.method === 'paypal') {
-        btn.textContent = state.lang === 'FR' ? 'PAYER VIA PAYPAL' : 'PAY VIA PAYPAL';
+        btn.textContent = state.lang === 'FR' ? 'COMMANDER' : 'ORDER';
       } else {
         btn.textContent = t('proofConfirm');
       }
@@ -809,11 +825,13 @@ function createCheckout() {
     const method = section.querySelector('.method-btn.selected')?.dataset.method || 'paypal';
     const total = state.cart.reduce((s, i) => s + i.price, 0);
     if (method === 'paypal') {
-      const totalFormatted = formatPrice(total, state.currency === 'EUR' ? 'EUR' : 'USD');
-      const msg = state.lang === 'FR'
-        ? `Envoie ${totalFormatted} à alexuchiwa23@gmail.com en ami proche (Friends & Family).\n\nAprès paiement, tu recevras une confirmation sur Discord.`
-        : `Send ${totalFormatted} to alexuchiwa23@gmail.com as Friends & Family.\n\nAfter payment, you will receive confirmation on Discord.`;
-      alert(msg);
+      state.cart = [];
+      state.cartOpen = false;
+      state.page = 'categories';
+      render();
+      setTimeout(() => {
+        alert(state.lang === 'FR' ? 'Commande confirmée ! Envoie le paiement via PayPal en ami proche. Tu recevras une confirmation sur Discord.' : 'Order confirmed! Send payment via PayPal as Friends & Family. You will receive confirmation on Discord.');
+      }, 300);
       return;
     }
     const order = {
