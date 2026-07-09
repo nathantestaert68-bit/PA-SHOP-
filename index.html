@@ -784,7 +784,7 @@ function createCheckout() {
       </div>
       <button class="checkout-btn" id="checkoutBtn">${t('proofConfirm')}</button>
       <div class="sub-after">
-        ${state.lang === 'FR' ? 'Après paiement, la preuve est envoyée automatiquement. Tu recevras une confirmation sur Discord.' : 'After payment, proof is sent automatically. You will receive confirmation on Discord.'}
+        ${state.lang === 'FR' ? 'Envoie en ami proche (Friends & Family). Après paiement, tu recevras une confirmation sur Discord.' : 'Send as Friends & Family. After payment, you will receive confirmation on Discord.'}
       </div>
     </div>`;
   
@@ -793,6 +793,12 @@ function createCheckout() {
     el.onclick = () => {
       section.querySelectorAll('[data-method]').forEach(b => b.classList.remove('selected'));
       el.classList.add('selected');
+      const btn = section.querySelector('#checkoutBtn');
+      if (el.dataset.method === 'paypal') {
+        btn.textContent = state.lang === 'FR' ? 'PAYER VIA PAYPAL' : 'PAY VIA PAYPAL';
+      } else {
+        btn.textContent = t('proofConfirm');
+      }
     };
   });
   section.querySelector('#checkoutBtn').onclick = () => {
@@ -802,6 +808,18 @@ function createCheckout() {
     if (!email) { alert(t('errEmail')); return; }
     const method = section.querySelector('.method-btn.selected')?.dataset.method || 'paypal';
     const total = state.cart.reduce((s, i) => s + i.price, 0);
+    if (method === 'paypal') {
+      const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=alexuchiwa23@gmail.com&item_name=PA+SHOP+Order&amount=${total.toFixed(2)}&currency_code=${state.currency === 'EUR' ? 'EUR' : 'USD'}`;
+      window.open(paypalUrl, '_blank');
+      state.cart = [];
+      state.cartOpen = false;
+      state.page = 'categories';
+      render();
+      setTimeout(() => {
+        alert(state.lang === 'FR' ? `Commande confirmée ! Envoie en ami proche (Friends & Family). Tu recevras un message sur Discord.` : `Order confirmed! Send as Friends & Family. You will receive a message on Discord.`);
+      }, 300);
+      return;
+    }
     const order = {
       id: 'PA-' + Math.random().toString(36).substring(2, 8).toUpperCase(),
       items: state.cart,
