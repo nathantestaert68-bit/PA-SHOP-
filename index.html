@@ -403,7 +403,11 @@ const products = {
     category: 'spoofer',
     features: ['Change HWID', 'Bypass HW ban', 'Vanguard compatible', 'Updates included', 'Guided setup on Discord', 'Instant activation'],
     plans: [
-      { id: 'standard', labelFR: 'Émulateur HWID', labelEN: 'HWID Emulator', priceEUR: 10, priceUSD: 10 }
+      { id: '1d', labelFR: '1 Jour', labelEN: '1 Day', priceEUR: 10, priceUSD: 10 },
+      { id: '3d', labelFR: '3 Jours', labelEN: '3 Days', priceEUR: 24.99, priceUSD: 24.99 },
+      { id: '1w', labelFR: '1 Semaine', labelEN: '1 Week', priceEUR: 49.99, priceUSD: 49.99 },
+      { id: '1m', labelFR: '1 Mois', labelEN: '1 Month', priceEUR: 99.99, priceUSD: 99.99 },
+      { id: 'lt', labelFR: 'Lifetime', labelEN: 'Lifetime', priceEUR: 249.99, priceUSD: 249.99, bestDeal: true }
     ]
   },
   nfa: {
@@ -603,7 +607,7 @@ function renderHomeProductCards() {
   const c = state.currency;
   const isFR = state.lang === 'FR';
   return [
-    { icon: '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#e10000" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>', title: t('emuLabel'), sub: isFR ? 'Contourne le ban hardware. Compatible Vanguard.' : 'Bypass hardware ban. Vanguard compatible.', price: formatPrice(10, c), stock: isFR ? 'Sur Discord' : 'On Discord', cat: 'spoofer' },
+    { icon: '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#e10000" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>', title: t('emuLabel'), sub: isFR ? 'Contourne le ban hardware. Compatible Vanguard.' : 'Bypass hardware ban. Vanguard compatible.', price: isFR ? 'Dès 10€' : 'From $10', stock: isFR ? 'Sur Discord' : 'On Discord', cat: 'spoofer' },
     { icon: '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#e10000" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>', title: t('nfaLabel'), sub: isFR ? 'Comptes NFA Ranked Ready, livraison instantanée.' : 'NFA Ranked Ready accounts, instant delivery.', price: formatPrice(1, c), stock: isFR ? 'Sur Discord' : 'On Discord', cat: 'comptes' },
     { icon: '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#e10000" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>', title: t('boostLabel'), sub: isFR ? 'Boost personnalisé sur Discord. Radiant / Immortal, garanti.' : 'Custom boost on Discord. Radiant / Immortal, guaranteed.', price: isFR ? 'Sur devis' : 'On request', stock: isFR ? 'Sur Discord' : 'On Discord', cat: 'boosts' }
   ].map(card => `
@@ -667,7 +671,6 @@ function renderCategoryBack() {
 function renderProduct(p) {
   const labelKey = p.id + 'Label';
   const c = state.currency;
-  const plan = p.plans[0];
   return `
     <div class="product-block">
       <div class="product-block-label">${t(labelKey)}</div>
@@ -679,16 +682,18 @@ function renderProduct(p) {
           <ul class="shop-card-features" style="margin-bottom:16px">
             ${(p.features || []).map(f => `<li><span class="check-icon">✓</span> ${f}</li>`).join('')}
           </ul>
-          <div style="max-width:280px;margin:0 auto">
-            <div class="plan-card">
-              <div class="plan-period">${state.lang === 'FR' ? plan.labelFR : plan.labelEN}</div>
-              <div class="plan-price">${formatPrice(plan.priceEUR, c === 'EUR' ? 'EUR' : 'USD')}</div>
-              <div class="plan-sub">&nbsp;</div>
-              <a class="shop-btn" href="https://discord.gg/5s8BAxPhA5" target="_blank" style="display:inline-flex;justify-content:center;align-items:center;gap:6px;width:100%;margin-top:14px;padding:10px 20px;text-decoration:none">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
-                Discord
-              </a>
-            </div>
+          <div class="pricing-grid">
+            ${p.plans.map(plan => `
+              <div class="plan-card ${plan.bestDeal ? 'plan-card--featured' : ''}">
+                ${plan.bestDeal ? `<div class="plan-badge">${t('bestDeal')}</div>` : ''}
+                <div class="plan-period">${state.lang === 'FR' ? plan.labelFR : plan.labelEN}</div>
+                <div class="plan-price">${formatPrice(plan.priceEUR, c === 'EUR' ? 'EUR' : 'USD')}</div>
+                <div class="plan-sub">&nbsp;</div>
+                <a class="shop-btn" href="https://discord.gg/5s8BAxPhA5" target="_blank" style="display:inline-flex;justify-content:center;align-items:center;gap:6px;width:100%;margin-top:14px;padding:10px 20px;text-decoration:none">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+                  Discord
+                </a>
+              </div>`).join('')}
           </div>
         </div>
       </div>
