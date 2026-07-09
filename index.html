@@ -794,7 +794,7 @@ function createCheckout() {
         <div class="paypal-info-row"><span class="paypal-info-label">${state.lang === 'FR' ? 'Montant' : 'Amount'}</span><span class="paypal-info-value" id="paypalAmount">${formatPrice(total, c === 'EUR' ? 'EUR' : 'USD')}</span></div>
         <div class="paypal-info-note">${state.lang === 'FR' ? 'Envoie en ami proche (Friends & Family) ⚠️' : 'Send as Friends & Family ⚠️'}</div>
       </div>
-      <button class="checkout-btn" id="checkoutBtn">${t('proofConfirm')}</button>
+      <button class="checkout-btn" id="checkoutBtn" onclick="window.open('https://discord.gg/5s8BAxPhA5','_blank')">${state.lang === 'FR' ? 'OUVRIR UN TICKET DISCORD' : 'OPEN A DISCORD TICKET'}</button>
       <div class="sub-after">
         ${state.lang === 'FR' ? 'Envoie en ami proche (Friends & Family). Après paiement, tu recevras une confirmation sur Discord.' : 'Send as Friends & Family. After payment, you will receive confirmation on Discord.'}
       </div>
@@ -817,42 +817,6 @@ function createCheckout() {
       }
     };
   });
-  section.querySelector('#checkoutBtn').onclick = () => {
-    const discord = section.querySelector('#discordInput').value.trim();
-    const email = section.querySelector('#emailInput').value.trim();
-    if (!discord) { alert(t('errDiscord')); return; }
-    if (!email) { alert(t('errEmail')); return; }
-    const method = section.querySelector('.method-btn.selected')?.dataset.method || 'paypal';
-    const total = state.cart.reduce((s, i) => s + i.price, 0);
-    if (method === 'paypal') {
-      state.cart = [];
-      state.cartOpen = false;
-      state.page = 'categories';
-      render();
-      setTimeout(() => {
-        alert(state.lang === 'FR' ? 'Commande confirmée ! Envoie le paiement via PayPal en ami proche. Tu recevras une confirmation sur Discord.' : 'Order confirmed! Send payment via PayPal as Friends & Family. You will receive confirmation on Discord.');
-      }, 300);
-      return;
-    }
-    const order = {
-      id: 'PA-' + Math.random().toString(36).substring(2, 8).toUpperCase(),
-      items: state.cart,
-      total,
-      currency: state.currency,
-      discord,
-      email,
-      method,
-      lang: state.lang,
-      date: new Date().toISOString()
-    };
-    state.cart = [];
-    state.cartOpen = false;
-    state.page = 'categories';
-    render();
-    setTimeout(() => {
-      alert(state.lang === 'FR' ? `Commande #${order.id} confirmée ! Tu recevras un message sur Discord.` : `Order #${order.id} confirmed! You will receive a message on Discord.`);
-    }, 300);
-  };
   return section;
 }
 
@@ -888,7 +852,7 @@ function createCartDrawer() {
 
   div.querySelector('#cartClose').onclick = () => { state.cartOpen = false; render(); };
   const goBtn = div.querySelector('#goCheckout');
-  if (goBtn) goBtn.onclick = () => { state.page = 'checkout'; state.cartOpen = false; render(); };
+  if (goBtn) goBtn.onclick = () => { window.open('https://discord.gg/5s8BAxPhA5', '_blank'); };
   div.querySelectorAll('[data-remove]').forEach(el => {
     el.onclick = () => {
       state.cart.splice(parseInt(el.dataset.remove), 1);
