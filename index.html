@@ -809,15 +809,11 @@ function createCheckout() {
     const method = section.querySelector('.method-btn.selected')?.dataset.method || 'paypal';
     const total = state.cart.reduce((s, i) => s + i.price, 0);
     if (method === 'paypal') {
-      const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=alexuchiwa23@gmail.com&item_name=PA+SHOP+Order&amount=${total.toFixed(2)}&currency_code=${state.currency === 'EUR' ? 'EUR' : 'USD'}`;
-      window.open(paypalUrl, '_blank');
-      state.cart = [];
-      state.cartOpen = false;
-      state.page = 'categories';
-      render();
-      setTimeout(() => {
-        alert(state.lang === 'FR' ? `Commande confirmée ! Envoie en ami proche (Friends & Family). Tu recevras un message sur Discord.` : `Order confirmed! Send as Friends & Family. You will receive a message on Discord.`);
-      }, 300);
+      const totalFormatted = formatPrice(total, state.currency === 'EUR' ? 'EUR' : 'USD');
+      const msg = state.lang === 'FR'
+        ? `Envoie ${totalFormatted} à alexuchiwa23@gmail.com en ami proche (Friends & Family).\n\nAprès paiement, tu recevras une confirmation sur Discord.`
+        : `Send ${totalFormatted} to alexuchiwa23@gmail.com as Friends & Family.\n\nAfter payment, you will receive confirmation on Discord.`;
+      alert(msg);
       return;
     }
     const order = {
