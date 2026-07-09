@@ -403,11 +403,7 @@ const products = {
     category: 'spoofer',
     features: ['Change HWID', 'Bypass HW ban', 'Vanguard compatible', 'Updates included', 'Guided setup on Discord', 'Instant activation'],
     plans: [
-      { id: '1d', labelFR: '1 Jour', labelEN: '1 Day', priceEUR: 10, priceUSD: 10 },
-      { id: '3d', labelFR: '3 Jours', labelEN: '3 Days', priceEUR: 24.99, priceUSD: 24.99 },
-      { id: '1w', labelFR: '1 Semaine', labelEN: '1 Week', priceEUR: 49.99, priceUSD: 49.99 },
-      { id: '1m', labelFR: '1 Mois', labelEN: '1 Month', priceEUR: 99.99, priceUSD: 99.99 },
-      { id: 'lt', labelFR: 'Lifetime', labelEN: 'Lifetime', priceEUR: 249.99, priceUSD: 249.99, bestDeal: true }
+      { id: 'standard', labelFR: 'Émulateur HWID', labelEN: 'HWID Emulator', priceEUR: 10, priceUSD: 10 }
     ]
   },
   nfa: {
@@ -607,7 +603,7 @@ function renderHomeProductCards() {
   const c = state.currency;
   const isFR = state.lang === 'FR';
   return [
-    { icon: '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#e10000" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>', title: t('emuLabel'), sub: isFR ? 'Contourne le ban hardware. Compatible Vanguard.' : 'Bypass hardware ban. Vanguard compatible.', badge: isFR ? 'POPULAIRE' : 'POPULAR', price: isFR ? 'Dès 10€' : 'From $10', stock: isFR ? 'En stock' : 'In Stock', cat: 'spoofer' },
+    { icon: '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#e10000" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>', title: t('emuLabel'), sub: isFR ? 'Contourne le ban hardware. Compatible Vanguard.' : 'Bypass hardware ban. Vanguard compatible.', badge: isFR ? '10€' : '$10', price: formatPrice(10, c), stock: isFR ? 'En stock' : 'In Stock', cat: 'spoofer' },
     { icon: '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#e10000" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>', title: t('nfaLabel'), sub: isFR ? 'Comptes NFA Ranked Ready, livraison instantanée.' : 'NFA Ranked Ready accounts, instant delivery.', badge: isFR ? '1€' : '$1', price: formatPrice(1, c), stock: isFR ? 'En stock' : 'In Stock', cat: 'comptes' },
     { icon: '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#e10000" stroke-width="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>', title: t('boostLabel'), sub: isFR ? 'Boost personnalisé sur Discord. Radiant / Immortal, garanti.' : 'Custom boost on Discord. Radiant / Immortal, guaranteed.', badge: isFR ? 'SUR DISCORD' : 'ON DISCORD', price: 'Discord', stock: isFR ? 'Ticket' : 'Open ticket', cat: 'boosts' }
   ].map(card => `
